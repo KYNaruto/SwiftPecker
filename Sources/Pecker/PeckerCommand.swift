@@ -61,7 +61,7 @@ private func createConfiguration(options: CommandLineOptions) throws -> Configur
         // Find the index path, default is   ~Library/Developer/Xcode/DerivedData/<target>/Index/DataStore
         let buildRoot = try processInfo.environmentVariable(name: EnvironmentKeys.buildRoot)
         let buildRootPath = AbsolutePath(buildRoot)
-        indexStorePath = buildRootPath.parentDirectory.parentDirectory.appending(component: "Index/DataStore")
+        indexStorePath = buildRootPath.parentDirectory.parentDirectory.appending(component: "Index.noindex/DataStore")
     }
     
     guard let cwd = localFileSystem.currentWorkingDirectory else {

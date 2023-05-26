@@ -60,12 +60,13 @@ extension Analyzer {
         }
         
         let symbols = sourceKitserver.findWorkspaceSymbols(matching: source.name)
-
+        
         // If not find symbol of source, means source used.
         guard let symbol = symbols.unique(of: source) else {
             return true
         }
 
+        print("检测当前source的无用代码 name:", source.name, "sourcekind: ", source.sourceKind, "查找到符号数量为: ",symbols.count, "++无用代码为: usr :", symbol.symbol.usr)
         // Skip declarations that override another. This works for both subclass overrides &
         // protocol extension overrides.
         let overridden = symbols.lazy.filter{ $0.symbol.usr != symbol.symbol.usr }.contains(where: { $0.isOverride(of: symbol) })

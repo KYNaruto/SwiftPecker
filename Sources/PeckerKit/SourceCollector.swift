@@ -1,5 +1,6 @@
 import Foundation
 import SwiftSyntax
+import SwiftSyntaxParser
 import TSCBasic
 
 public typealias FileSystem = TSCBasic.FileSystem
@@ -33,13 +34,15 @@ class SourceCollector {
     /// Currently only supports Swift
     func collect() {
         let files = computeContents()
+        
         let safeSources = ThreadSafe<[SourceDetail]>([])
-        DispatchQueue.concurrentPerform(iterations: files.count) { index in
-            let fileURL = files[index].asURL
+        for (index, currentFile) in files.enumerated() {
+            let fileURL = currentFile.asURL
             do {
+                print("+++ 编译文件顺序为 --", index, "路径为 --", fileURL.absoluteString)
                 let syntax = try SyntaxParser.parse(fileURL)
                 let context = CollectContext(configuration: configuration,
-                                         filePath: files[index].description,
+                                         filePath: currentFile.description,
                                          sourceFileSyntax: syntax)
                 let pipeline = SwiftSourceCollectVisitor(context: context)
                 pipeline.walk(syntax)
@@ -50,6 +53,25 @@ class SourceCollector {
             }
         }
         sources = safeSources.value
+        
+        
+//        DispatchQueue.concurrentPerform(iterations: files.count) { index in
+//            let fileURL = files[index].asURL
+//            do {
+//                print("+++ 编译文件顺序为 --", index, "路径为 --", fileURL.absoluteString)
+//                let syntax = try SyntaxParser.parse(fileURL)
+//                let context = CollectContext(configuration: configuration,
+//                                         filePath: files[index].description,
+//                                         sourceFileSyntax: syntax)
+//                let pipeline = SwiftSourceCollectVisitor(context: context)
+//                pipeline.walk(syntax)
+//                safeSources.atomically { $0 += pipeline.sources }
+//                sourceExtensions.atomically { $0 += pipeline.sourceExtensions }
+//            } catch {
+//                fputs("Error parsing \(fileURL) \(error)", stderr)
+//            }
+//        }
+//        sources = safeSources.value
     }
 
     /// Compute the contents of the files in a target.
@@ -58,7 +80,7 @@ class SourceCollector {
     private func computeContents() -> [AbsolutePath] {
         var contents: [AbsolutePath] = []
         var queue: [AbsolutePath] = [targetPath]
-
+        // 递归遍历获取所有文件
         while let curr = queue.popLast() {
             
             // Ignore if this is an excluded path.
@@ -81,14 +103,14 @@ class SourceCollector {
             }
 
             do {
-                // Add directory content to the queue.
+                // Add directory content to the queue. 获取文件路径
                 let dirContents = try fs.getDirectoryContents(curr).map{ curr.appending(component: $0) }
                 queue += dirContents
             } catch {
                 log(error.localizedDescription, level: .warning)
             }
         }
-
+        print("查找swift文件 --总数量为 \n", contents.count)
         return contents
     }
 }

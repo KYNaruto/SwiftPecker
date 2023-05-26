@@ -5,8 +5,8 @@
         "package": "IndexStoreDB",
         "repositoryURL": "https://github.com/apple/indexstore-db.git",
         "state": {
-          "branch": "release/5.3",
-          "revision": "58b306e0274155911dd4957945fd7e630798fec5",
+          "branch": "release/5.7",
+          "revision": "9305648b0a8700434fa2e55eeacf7c7f4402a0d5",
           "version": null
         }
       },
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/apple/swift-syntax",
         "state": {
           "branch": null,
-          "revision": "2fff9fc25cdc059379b6bd309377cfab45d8520c",
-          "version": "0.50400.0"
+          "revision": "72d3da66b085c2299dd287c2be3b92b5ebd226de",
+          "version": "0.50700.1"
         }
       },
       {
@@ -41,8 +41,8 @@
         "package": "swift-tools-support-core",
         "repositoryURL": "https://github.com/apple/swift-tools-support-core.git",
         "state": {
-          "branch": "main",
-          "revision": "8e4801535f45b548079a4f607667ea750480bb4b",
+          "branch": "release/5.7",
+          "revision": "286b48b1d73388e1d49b2bb33aabf995838104e3",
           "version": null
         }
       },
